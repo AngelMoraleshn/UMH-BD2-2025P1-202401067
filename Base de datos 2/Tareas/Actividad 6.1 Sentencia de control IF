@@ -1,0 +1,16 @@
+DELIMITER //
+
+CREATE PROCEDURE UpdateExchangeRate(
+    IN p_currency_id INT,
+    IN p_exchange_rate DECIMAL(10,4)
+)
+BEGIN
+    IF p_currency_id > 0 AND p_exchange_rate IS NOT NULL AND p_exchange_rate > 0 THEN
+        UPDATE currencies
+        SET exchange_rate = p_exchange_rate
+        WHERE currency_id = p_currency_id;
+    END IF;
+END //
+
+DELIMITER ;
+select*from reservas_hoteles.currencies where currency_id

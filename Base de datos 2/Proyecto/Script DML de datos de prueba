@@ -1,0 +1,25 @@
+USE umaps;
+
+-- Inserción de Usuarios
+INSERT INTO Usuarios (codigo_comercial, nombre, direccion) VALUES
+('U1001', 'Juan Pérez', 'Calle 123, Ciudad A'),
+('U1002', 'María López', 'Avenida 456, Ciudad B'),
+('U1003', 'Carlos Gómez', 'Pasaje 789, Ciudad C');
+
+-- Inserción de Medidores
+INSERT INTO Medidores (numero_medidor, id_usuario) VALUES
+('M2001', 1),
+('M2002', 2),
+('M2003', 3);
+
+-- Inserción de Consumos
+INSERT INTO Consumos (id_medidor, lectura_anterior, lectura_actual, consumo_m3, fecha_lectura) VALUES
+(1, 100.50, 150.75, 50.25, '2025-03-01'),
+(2, 200.00, 250.30, 50.30, '2025-03-05'),
+(3, 300.10, 350.40, 50.30, '2025-03-10');
+
+-- Inserción de Facturas
+INSERT INTO Facturas (id_usuario, id_consumo, fecha_facturacion, fecha_vencimiento, total_pagar, estado) VALUES
+(1, 1, '2025-03-02', '2025-03-15', 75.38, 'Pendiente'),
+(2, 2, '2025-03-06', '2025-03-20', 80.48, 'Pendiente'),
+(3, 3, '2025-03-11', '2025-03-25', 78.95, 'Pagada');

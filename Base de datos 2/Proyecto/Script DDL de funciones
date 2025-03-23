@@ -1,0 +1,60 @@
+USE umaps;
+
+-- Función para calcular el consumo total de un usuario en un período de tiempo
+DELIMITER ;;
+CREATE FUNCTION calcular_consumo_usuario(
+    p_id_usuario INT, 
+    p_fecha_inicio DATE, 
+    p_fecha_fin DATE
+) RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+    DECLARE total_consumo DECIMAL(10,2);
+    
+    SELECT COALESCE(SUM(c.consumo_m3), 0) 
+    INTO total_consumo
+    FROM Consumos c
+    JOIN Medidores m ON c.id_medidor = m.id_medidor
+    WHERE m.id_usuario = p_id_usuario 
+    AND c.fecha_lectura BETWEEN p_fecha_inicio AND p_fecha_fin;
+    
+    RETURN total_consumo;
+END ;;
+DELIMITER ;
+
+-- Función para obtener el saldo total de un usuario (sumando facturas pendientes)
+DELIMITER ;;
+CREATE FUNCTION obtener_saldo_usuario(
+    p_id_usuario INT
+) RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+    DECLARE saldo_total DECIMAL(10,2);
+    
+    SELECT COALESCE(SUM(total_pagar), 0) 
+    INTO saldo_total
+    FROM Facturas
+    WHERE id_usuario = p_id_usuario AND estado = 'Pendiente';
+    
+    RETURN saldo_total;
+END ;;
+DELIMITER ;
+
+-- Función para calcular el promedio de consumo de agua de un usuario
+DELIMITER ;;
+CREATE FUNCTION promedio_consumo_usuario(
+    p_id_usuario INT
+) RETURNS DECIMAL(10,2)
+DETERMINISTIC
+BEGIN
+    DECLARE promedio DECIMAL(10,2);
+    
+    SELECT COALESCE(AVG(consumo_m3), 0) 
+    INTO promedio
+    FROM Consumos c
+    JOIN Medidores m ON c.id_medidor = m.id_medidor
+    WHERE m.id_usuario = p_id_usuario;
+    
+    RETURN promedio;
+END ;;
+DELIMITER ;

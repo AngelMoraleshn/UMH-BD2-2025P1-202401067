@@ -1,0 +1,40 @@
+USE umaps;
+
+-- Procedimiento para actualizar la dirección de un usuario
+DELIMITER $$
+CREATE PROCEDURE actualizar_direccion_usuario(
+    IN p_id_usuario INT,
+    IN p_nueva_direccion TEXT
+)
+BEGIN
+    UPDATE Usuarios
+    SET direccion = p_nueva_direccion
+    WHERE id_usuario = p_id_usuario;
+END $$
+DELIMITER ;
+
+-- Procedimiento para actualizar el número de medidor de un usuario
+DELIMITER $$
+CREATE PROCEDURE actualizar_numero_medidor(
+    IN p_id_medidor INT,
+    IN p_nuevo_numero VARCHAR(50)
+)
+BEGIN
+    UPDATE Medidores
+    SET numero_medidor = p_nuevo_numero
+    WHERE id_medidor = p_id_medidor;
+END $$
+DELIMITER ;
+
+-- Procedimiento para actualizar el estado de una factura
+DELIMITER $$
+CREATE PROCEDURE actualizar_estado_factura(
+    IN p_id_factura INT,
+    IN p_nuevo_estado VARCHAR(20)
+)
+BEGIN
+    UPDATE Facturas
+    SET estado = p_nuevo_estado
+    WHERE id_factura = p_id_factura;
+END $$
+DELIMITER ;

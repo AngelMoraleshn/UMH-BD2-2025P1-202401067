@@ -1,0 +1,45 @@
+CREATE DATABASE umaps;
+USE umaps;
+
+-- Tabla de Usuarios (Clientes)
+CREATE TABLE Usuarios (
+    id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    codigo_comercial VARCHAR(50) UNIQUE NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    direccion TEXT NOT NULL
+);
+
+-- Tabla de Medidores
+CREATE TABLE Medidores (
+    id_medidor INT AUTO_INCREMENT PRIMARY KEY,
+    numero_medidor VARCHAR(50) UNIQUE NOT NULL,
+    id_usuario INT NOT NULL,
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
+);
+
+-- Tabla de Consumos (Registro de consumo de agua)
+CREATE TABLE Consumos (
+    id_consumo INT AUTO_INCREMENT PRIMARY KEY,
+    id_medidor INT NOT NULL,
+    lectura_anterior DECIMAL(10,2) NOT NULL,
+    lectura_actual DECIMAL(10,2) NOT NULL,
+    consumo_m3 DECIMAL(10,2) NOT NULL,
+    fecha_lectura DATE NOT NULL,
+    FOREIGN KEY (id_medidor) REFERENCES Medidores(id_medidor)
+);
+
+-- Tabla de Facturas (Registro de cobros mensuales)
+CREATE TABLE Facturas (
+    id_factura INT AUTO_INCREMENT PRIMARY KEY,
+    id_usuario INT NOT NULL,
+    id_consumo INT NOT NULL,
+    fecha_facturacion DATE NOT NULL,
+    fecha_vencimiento DATE NOT NULL,
+    total_pagar DECIMAL(10,2) NOT NULL,
+    estado VARCHAR(20) DEFAULT 'Pendiente',
+    FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario),
+    FOREIGN KEY (id_consumo) REFERENCES Consumos(id_consumo)
+);
+use umaps;
+
+

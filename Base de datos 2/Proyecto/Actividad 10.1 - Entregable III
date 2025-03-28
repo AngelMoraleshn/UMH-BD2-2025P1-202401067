@@ -1,0 +1,34 @@
+-- Creación de la tabla de logs
+CREATE TABLE Logs (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    tipo_evento VARCHAR(50) NOT NULL,
+    data TEXT NOT NULL
+);
+-- Procedimiento almacenado para insertar un nuevo consumo
+DELIMITER //
+CREATE PROCEDURE InsertarConsumo(
+    IN p_id_medidor INT,
+    IN p_lectura_anterior DECIMAL(10,2),
+    IN p_lectura_actual DECIMAL(10,2),
+    IN p_fecha_lectura DATE
+)
+BEGIN
+    DECLARE v_consumo DECIMAL(10,2);
+    SET v_consumo = p_lectura_actual - p_lectura_anterior;
+    
+    INSERT INTO Consumos (id_medidor, lectura_anterior, lectura_actual, consumo_m3, fecha_lectura)
+    VALUES (p_id_medidor, p_lectura_anterior, p_lectura_actual, v_consumo, p_fecha_lectura);
+END //
+DELIMITER ;
+
+-- Trigger para registrar inserciones en la tabla de logs
+DELIMITER //
+CREATE TRIGGER after_consumo_insert
+AFTER INSERT ON Consumos
+FOR EACH ROW
+BEGIN
+    INSERT INTO Logs (tipo_evento, data)
+    VALUES ('Inserción de Consumo', CONCAT('Medidor ID: ', NEW.id_medidor, ', Consumo: ', NEW.consumo_m3, ' m3, Fecha: ', NEW.fecha_lectura));
+END //
+DELIMITER ;
